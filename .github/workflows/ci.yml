@@ -1,0 +1,64 @@
+name: CI
+
+# Same hybrid case as lynkflow-mfe-template's workflow (see that file's
+# header comment for the full reasoning):
+#   - @lynkflow/config isn't published -> sibling-checkout trick.
+#   - @lynkflow/ui-kit IS a real registry dependency here -> needs actual
+#     registry read auth, not a sibling checkout.
+#
+# Requires ONE repo secret: CROSS_REPO_PAT -- a classic PAT with BOTH the
+# `repo` scope (checkout the private lynkflow-config sibling) and the
+# `read:packages` scope (download @lynkflow/ui-kit from GitHub Packages).
+# Add it under Settings -> Secrets and variables -> Actions.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lynkflow-shell
+    steps:
+      - name: Checkout lynkflow-shell
+        uses: actions/checkout@v4
+        with:
+          path: lynkflow-shell
+
+      - name: Checkout lynkflow-config (unpublished sibling dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: LynkFlow/lynkflow-config
+          token: ${{ secrets.CROSS_REPO_PAT }}
+          path: lynkflow-config
+
+      - name: Use Node.js (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: "lynkflow-shell/.nvmrc"
+          cache: "npm"
+          cache-dependency-path: lynkflow-shell/package-lock.json
+
+      - name: Configure npm (install-links for the config sibling, registry auth for ui-kit)
+        run: |
+          cp .npmrc.example .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.CROSS_REPO_PAT }}" >> .npmrc
+
+      - name: Install
+        run: npm install --install-links
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build

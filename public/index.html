@@ -1,0 +1,20 @@
+<!doctype html>
+<!--
+  Static lang/dir for now -- "en"/"ltr" only. Real Shell-owned language
+  switching (the synchronous inline script reading a profile-backed cookie,
+  falling back to navigator.language, reconciled against the authenticated
+  user's stored preference once the session loads) is documented in
+  .claude/rules/i18n.md but deliberately NOT built in this first pass -- this
+  is a minimal Shell (routing + composition only, no auth, no i18n runtime
+  yet). Wire up i18n.md's mechanism here when a real MFE needs AR/RTL.
+-->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LynkFlow</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

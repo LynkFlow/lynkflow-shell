@@ -1,0 +1,20 @@
+{
+  "extends": "@lynkflow/config/tsconfig/react-app.json",
+  "compilerOptions": {
+    /* react-app.json already sets: module "preserve", moduleResolution
+       "bundler", lib [DOM, DOM.Iterable, ESNext], jsx "react-jsx", noEmit,
+       resolveJsonModule, allowSyntheticDefaultImports -- plus base.json's
+       target/strict/noUncheckedIndexedAccess/exactOptionalPropertyTypes/
+       verbatimModuleSyntax/isolatedModules/moduleDetection/sourceMap/
+       skipLibCheck. Everything below is specific to THIS repo. */
+
+    // Same call as lynkflow-mfe-template's tsconfig.json -- see that repo's
+    // comment for the full reasoning (a wildcard *.css ambient module buys a
+    // file, not real typo safety; webpack/Jest already fail loudly on a bad
+    // stylesheet path).
+    "noUncheckedSideEffectImports": false,
+
+    "types": ["jest"]
+  },
+  "include": ["src"]
+}
