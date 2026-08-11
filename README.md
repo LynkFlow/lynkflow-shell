@@ -43,11 +43,11 @@ workspace root, and one of them needs a one-time build:
    `dist/` is gitignored, so a fresh clone has none until this runs. Skip
    this and `npm install` here will succeed, but `npm run typecheck`/`build`
    will fail with `Cannot find module '@lynkflow/ui-kit'`.
-3. `cp .npmrc.example .npmrc` -- needed for `install-links=true` (so
+3. `.npmrc` is already committed with `install-links=true` set (so
    `@lynkflow/config`'s own transitive deps actually get installed; see
-   `.claude/rules/tooling.md`'s "Known limitations"). No registry token is
-   required for this repo today: both dependencies above resolve via local
-   `file:` links, not a real registry fetch.
+   `.claude/rules/tooling.md`'s "Known limitations") -- nothing to copy. No
+   registry token is required for this repo today: both dependencies above
+   resolve via local `file:` links, not a real registry fetch.
 
 Then:
 
