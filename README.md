@@ -29,6 +29,28 @@ unbranded layout. Explicitly NOT built yet:
 
 ## Run it standalone
 
+**Before `npm install` works at all**, two `@lynkflow/*` packages aren't on
+the registry yet and are consumed via a local `file:` link instead
+(`.claude/rules/tooling.md`) -- both siblings need to already exist at the
+workspace root, and one of them needs a one-time build:
+
+1. `../lynkflow-config` must exist (source only, no build step -- it ships
+   plain `.mjs`/`.cjs`/`.json`).
+2. `../lynkflow-ui-kit` must exist **and have been built at least once**:
+   ```bash
+   cd ../lynkflow-ui-kit && npm install && npm run build
+   ```
+   `dist/` is gitignored, so a fresh clone has none until this runs. Skip
+   this and `npm install` here will succeed, but `npm run typecheck`/`build`
+   will fail with `Cannot find module '@lynkflow/ui-kit'`.
+3. `cp .npmrc.example .npmrc` -- needed for `install-links=true` (so
+   `@lynkflow/config`'s own transitive deps actually get installed; see
+   `.claude/rules/tooling.md`'s "Known limitations"). No registry token is
+   required for this repo today: both dependencies above resolve via local
+   `file:` links, not a real registry fetch.
+
+Then:
+
 ```bash
 cp .env.example .env
 npm install
@@ -39,6 +61,11 @@ Opens on `http://localhost:3000` (or `.env`'s `PORT`). With no remote running,
 you'll see the home page and nav; the "Scratch" link will fail to load (no
 `scratch` remote listening) until you also run the federation smoke test
 below.
+
+This two-sibling-repo precondition goes away the moment `@lynkflow/config`
+and `@lynkflow/ui-kit@0.1.1` are actually published (`progress.md`'s
+publishing queue) -- at that point this becomes a real dependency install
+like any other npm package, no sibling repos or manual builds required.
 
 ## Federation smoke test
 
