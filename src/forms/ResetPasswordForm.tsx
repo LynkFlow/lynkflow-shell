@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
-import { PasswordFormInput } from "../../../components/forms/FormInput";
-import { Banner } from "../../../components/Banner";
-import PasswordChecklist from "./PasswordChecklist";
-import { authErrorPresentation } from "../constants/errorMessages";
-import { resetPasswordFormSchema } from "../schemas/ResetPasswordForm.schema";
-import type { ResetPasswordFormValues } from "../schemas/ResetPasswordForm.schema";
-import type { useResetPassword } from "../hooks/useResetPassword";
+import { PasswordFormInput } from "../components/forms/FormInput";
+import { Banner } from "../components/Banner";
+import PasswordChecklist from "../features/auth/components/PasswordChecklist";
+import { authErrorPresentation } from "../features/auth/constants/errorMessages";
+import { resetPasswordFormSchema } from "../features/auth/schemas/ResetPasswordForm.schema";
+import type { ResetPasswordFormValues } from "../features/auth/schemas/ResetPasswordForm.schema";
+import type { useResetPassword } from "../features/auth/hooks/useResetPassword";
 
 interface ResetPasswordFormProps {
   resetPassword: ReturnType<typeof useResetPassword>["resetPassword"];

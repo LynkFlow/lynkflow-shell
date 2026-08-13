@@ -2,14 +2,14 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput, PasswordFormInput } from "../../../components/forms/FormInput";
-import { Banner } from "../../../components/Banner";
-import PasswordChecklist from "./PasswordChecklist";
-import { useSignup } from "../hooks/useSignup";
-import { authErrorPresentation } from "../constants/errorMessages";
-import { signupFormSchema } from "../schemas/SignupForm.schema";
-import type { SignupFormValues } from "../schemas/SignupForm.schema";
-import type { SignupRole } from "../types/auth.types";
+import { FormInput, PasswordFormInput } from "../components/forms/FormInput";
+import { Banner } from "../components/Banner";
+import PasswordChecklist from "../features/auth/components/PasswordChecklist";
+import { useSignup } from "../features/auth/hooks/useSignup";
+import { authErrorPresentation } from "../features/auth/constants/errorMessages";
+import { signupFormSchema } from "../features/auth/schemas/SignupForm.schema";
+import type { SignupFormValues } from "../features/auth/schemas/SignupForm.schema";
+import type { SignupRole } from "../features/auth/types/auth.types";
 
 const roleOptions: { value: SignupRole; label: string }[] = [
   { value: "real_estate_developer", label: "Real estate Developer" },

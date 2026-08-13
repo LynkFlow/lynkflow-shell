@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import AuthLayout from "../../../layouts/AuthLayout";
-import SignupForm from "../components/SignupForm";
+import SignupForm from "../../../forms/SignupForm";
 
 export default function SignupPage() {
   return (

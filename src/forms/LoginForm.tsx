@@ -3,13 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput, PasswordFormInput } from "../../../components/forms/FormInput";
-import { Checkbox } from "../../../components/Checkbox";
-import { Banner } from "../../../components/Banner";
-import { useLogin } from "../hooks/useLogin";
-import { authErrorPresentation } from "../constants/errorMessages";
-import { loginFormSchema } from "../schemas/LoginForm.schema";
-import type { LoginFormValues } from "../schemas/LoginForm.schema";
+import { FormInput, PasswordFormInput } from "../components/forms/FormInput";
+import { Checkbox } from "../components/Checkbox";
+import { Banner } from "../components/Banner";
+import { useLogin } from "../features/auth/hooks/useLogin";
+import { authErrorPresentation } from "../features/auth/constants/errorMessages";
+import { loginFormSchema } from "../features/auth/schemas/LoginForm.schema";
+import type { LoginFormValues } from "../features/auth/schemas/LoginForm.schema";
 
 /**
  * GEN-US002 (Login). react-hook-form + zod, per .claude/rules/forms.md --

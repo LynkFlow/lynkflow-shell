@@ -1,5 +1,5 @@
 import AuthLayout from "../../../layouts/AuthLayout";
-import ForgotPasswordForm from "../components/ForgotPasswordForm";
+import ForgotPasswordForm from "../../../forms/ForgotPasswordForm";
 import CheckEmailNotice from "../components/CheckEmailNotice";
 import { useForgotPassword } from "../hooks/useForgotPassword";
 

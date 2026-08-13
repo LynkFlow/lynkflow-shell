@@ -1,5 +1,5 @@
 import AuthLayout from "../../../layouts/AuthLayout";
-import ResetPasswordForm from "../components/ResetPasswordForm";
+import ResetPasswordForm from "../../../forms/ResetPasswordForm";
 import ResetPasswordError from "../components/ResetPasswordError";
 import ResetPasswordSuccess from "../components/ResetPasswordSuccess";
 import { useResetPassword } from "../hooks/useResetPassword";

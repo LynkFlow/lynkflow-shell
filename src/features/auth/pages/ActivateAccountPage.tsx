@@ -1,5 +1,5 @@
 import AuthLayout from "../../../layouts/AuthLayout";
-import ActivateAccountForm from "../components/ActivateAccountForm";
+import ActivateAccountForm from "../../../forms/ActivateAccountForm";
 import ActivationTokenError from "../components/ActivationTokenError";
 import ActivationSuccess from "../components/ActivationSuccess";
 import { useActivateAccount } from "../hooks/useActivateAccount";

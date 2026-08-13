@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput } from "../../../components/forms/FormInput";
-import { Banner } from "../../../components/Banner";
-import { authErrorPresentation } from "../constants/errorMessages";
-import { forgotPasswordFormSchema } from "../schemas/ForgotPasswordForm.schema";
-import type { ForgotPasswordFormValues } from "../schemas/ForgotPasswordForm.schema";
-import type { useForgotPassword } from "../hooks/useForgotPassword";
+import { FormInput } from "../components/forms/FormInput";
+import { Banner } from "../components/Banner";
+import { authErrorPresentation } from "../features/auth/constants/errorMessages";
+import { forgotPasswordFormSchema } from "../features/auth/schemas/ForgotPasswordForm.schema";
+import type { ForgotPasswordFormValues } from "../features/auth/schemas/ForgotPasswordForm.schema";
+import type { useForgotPassword } from "../features/auth/hooks/useForgotPassword";
 
 interface ForgotPasswordFormProps {
   forgotPassword: ReturnType<typeof useForgotPassword>;

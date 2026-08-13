@@ -2,15 +2,15 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
-import { PasswordFormInput } from "../../../components/forms/FormInput";
-import { Checkbox } from "../../../components/Checkbox";
-import { Banner } from "../../../components/Banner";
-import PasswordChecklist from "./PasswordChecklist";
-import { authErrorPresentation } from "../constants/errorMessages";
-import { activateAccountFormSchema } from "../schemas/ActivateAccountForm.schema";
-import type { ActivateAccountFormValues } from "../schemas/ActivateAccountForm.schema";
-import type { ActivationDetails } from "../types/auth.types";
-import type { useActivateAccount } from "../hooks/useActivateAccount";
+import { PasswordFormInput } from "../components/forms/FormInput";
+import { Checkbox } from "../components/Checkbox";
+import { Banner } from "../components/Banner";
+import PasswordChecklist from "../features/auth/components/PasswordChecklist";
+import { authErrorPresentation } from "../features/auth/constants/errorMessages";
+import { activateAccountFormSchema } from "../features/auth/schemas/ActivateAccountForm.schema";
+import type { ActivateAccountFormValues } from "../features/auth/schemas/ActivateAccountForm.schema";
+import type { ActivationDetails } from "../features/auth/types/auth.types";
+import type { useActivateAccount } from "../features/auth/hooks/useActivateAccount";
 
 interface ActivateAccountFormProps {
   details: ActivationDetails;
