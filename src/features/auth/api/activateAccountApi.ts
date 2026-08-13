@@ -1,12 +1,15 @@
 import { authHttp } from "./authHttp";
 import type {
-  ActivationDetails,
-  CompleteActivationPayload,
-} from "../types/auth.types";
+  CompleteActivationRequest,
+  ValidateActivationRequest,
+  ValidateActivationResponse,
+} from "@lynkflow/types";
 
 export const activateAccountApi = {
   validateActivation: (token: string) =>
-    authHttp.post<ActivationDetails>("/activation/validate", { token }),
-  completeActivation: (payload: CompleteActivationPayload) =>
+    authHttp.post<ValidateActivationResponse>("/activation/validate", {
+      token,
+    } satisfies ValidateActivationRequest),
+  completeActivation: (payload: CompleteActivationRequest) =>
     authHttp.post<void>("/activation/complete", payload),
 };

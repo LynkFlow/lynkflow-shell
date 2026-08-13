@@ -9,11 +9,11 @@ import PasswordChecklist from "../features/auth/components/PasswordChecklist";
 import { authErrorPresentation } from "../features/auth/constants/errorMessages";
 import { activateAccountFormSchema } from "../features/auth/schemas/ActivateAccountForm.schema";
 import type { ActivateAccountFormValues } from "../features/auth/schemas/ActivateAccountForm.schema";
-import type { ActivationDetails } from "../features/auth/types/auth.types";
+import type { ValidateActivationResponse } from "@lynkflow/types";
 import type { useActivateAccount } from "../features/auth/hooks/useActivateAccount";
 
 interface ActivateAccountFormProps {
-  details: ActivationDetails;
+  details: ValidateActivationResponse;
   completeActivation: ReturnType<typeof useActivateAccount>["completeActivation"];
 }
 

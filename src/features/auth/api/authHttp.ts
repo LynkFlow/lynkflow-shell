@@ -21,7 +21,7 @@
 import axios from "axios";
 import type { AxiosError } from "axios";
 
-import type { AuthApiError, AuthErrorCode } from "../types/auth.types";
+import type { AuthApiError, AuthErrorCode } from "@lynkflow/types";
 import { env } from "../../../app/config";
 
 interface ApiEnvelope<T> {

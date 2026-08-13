@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { resetPasswordApi } from "../api/resetPasswordApi";
 import type { AuthApiRequestError } from "../api/authHttp";
-import type { ResetPasswordPayload } from "../types/auth.types";
+import type { ResetPasswordRequest } from "@lynkflow/types";
 
 type TokenState = "checking" | "valid" | "invalid";
 
@@ -42,7 +42,7 @@ export function useResetPassword() {
   const resetPassword = useMutation<
     void,
     AuthApiRequestError,
-    Omit<ResetPasswordPayload, "token">
+    Omit<ResetPasswordRequest, "token">
   >({
     mutationFn: (payload) => resetPasswordApi.resetPassword({ token, ...payload }),
   });

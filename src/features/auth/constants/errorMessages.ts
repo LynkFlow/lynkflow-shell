@@ -1,4 +1,4 @@
-import type { AuthErrorCode } from "../types/auth.types";
+import type { AuthErrorCode } from "@lynkflow/types";
 import type { BannerVariant } from "../../../components/Banner";
 
 interface ErrorPresentation {
@@ -82,48 +82,31 @@ export const authErrorPresentation: Record<AuthErrorCode, ErrorPresentation> = {
     title: "Current password is incorrect",
     message: "Please double-check and try again.",
   },
-  NETWORK_ERROR: {
-    variant: "error",
-    title: "Couldn't reach the server",
-    message: "Check your connection and try again.",
-  },
-  AUTH_EMAIL_ALREADY_REGISTERED: {
-    variant: "error",
-    title: "Email already in use",
-    message: "An account already exists for this email address. Try signing in instead.",
-  },
-  PASSWORD_POLICY_VIOLATION: {
-    variant: "error",
-    title: "Password does not comply with the password policy",
-    message: "Please enter a different password.",
-  },
-  AUTH_PASSWORD_RESET_RATE_LIMITED: {
-    variant: "error",
-    title: "Too many requests",
-    message:
-      "You have made too many requests in a short period of time. Please wait and try again later.",
-  },
+  // Reused across every rate-limited flow (login, password reset, change
+  // password, activation) -- previously four separate codes here, each
+  // rendering this exact same text. See @lynkflow/types' auth.types.ts for
+  // the consolidation rationale.
   AUTH_RATE_LIMITED: {
     variant: "error",
     title: "Too many requests",
     message:
       "You have made too many requests in a short period of time. Please wait and try again later.",
   },
-  AUTH_CHANGE_PASSWORD_RATE_LIMITED: {
+  AUTH_EMAIL_ALREADY_REGISTERED: {
     variant: "error",
-    title: "Too many requests",
-    message:
-      "You have made too many requests in a short period of time. Please wait and try again later.",
-  },
-  AUTH_ACTIVATION_RATE_LIMITED: {
-    variant: "error",
-    title: "Too many requests",
-    message:
-      "You have made too many requests in a short period of time. Please wait and try again later.",
+    title: "Email already in use",
+    message: "An account already exists for this email address. Try signing in instead.",
   },
   VALIDATION_ERROR: {
     variant: "error",
     title: "Validation Error",
     message: "There was a validation error. Please check your input and try again.",
+  },
+  // Client-synthesized, never issued by the server -- see @lynkflow/types'
+  // AuthErrorCode docblock for why it's still part of this same union/map.
+  NETWORK_ERROR: {
+    variant: "error",
+    title: "Couldn't reach the server",
+    message: "Check your connection and try again.",
   },
 };

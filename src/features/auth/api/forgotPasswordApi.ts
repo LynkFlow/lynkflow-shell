@@ -1,7 +1,6 @@
 import { authHttp } from "./authHttp";
-import type { ForgotPasswordPayload } from "../types/auth.types";
+import type { ForgotPasswordRequest } from "@lynkflow/types";
 
 export const forgotPasswordApi = {
-  forgotPassword: (payload: ForgotPasswordPayload) =>
-    authHttp.post<void>("/password/forgot", payload),
+  forgotPassword: (payload: ForgotPasswordRequest) => authHttp.post<void>("/password/forgot", payload),
 };

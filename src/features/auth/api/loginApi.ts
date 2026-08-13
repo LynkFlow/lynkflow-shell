@@ -1,6 +1,6 @@
 import { authHttp } from "./authHttp";
-import type { LoginPayload, LoginResult } from "../types/auth.types";
+import type { LoginRequest, LoginResponse } from "@lynkflow/types";
 
 export const loginApi = {
-  login: (payload: LoginPayload) => authHttp.post<LoginResult>("/login", payload),
+  login: (payload: LoginRequest) => authHttp.post<LoginResponse>("/login", payload),
 };

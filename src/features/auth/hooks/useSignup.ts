@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 import { signupApi } from "../api/signupApi";
 import type { AuthApiRequestError } from "../api/authHttp";
-import type { SignupPayload } from "../types/auth.types";
+import type { SignupRequest } from "@lynkflow/types";
 
 export function useSignup() {
   const navigate = useNavigate();
 
-  return useMutation<void, AuthApiRequestError, SignupPayload>({
+  return useMutation<void, AuthApiRequestError, SignupRequest>({
     mutationFn: (payload) => signupApi.signup(payload),
     onSuccess: () => {
       void navigate("/login");

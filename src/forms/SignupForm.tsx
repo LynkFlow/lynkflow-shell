@@ -9,9 +9,9 @@ import { useSignup } from "../features/auth/hooks/useSignup";
 import { authErrorPresentation } from "../features/auth/constants/errorMessages";
 import { signupFormSchema } from "../features/auth/schemas/SignupForm.schema";
 import type { SignupFormValues } from "../features/auth/schemas/SignupForm.schema";
-import type { SignupRole } from "../features/auth/types/auth.types";
+import type { SignupAccountType } from "@lynkflow/types";
 
-const roleOptions: { value: SignupRole; label: string }[] = [
+const roleOptions: { value: SignupAccountType; label: string }[] = [
   { value: "real_estate_developer", label: "Real estate Developer" },
   { value: "brokerage_company", label: "Brokerage Company" },
   { value: "sales_agent", label: "Sales Agent" },

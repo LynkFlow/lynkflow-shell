@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { loginApi } from "../api/loginApi";
 import type { AuthApiRequestError } from "../api/authHttp";
-import type { LoginPayload } from "../types/auth.types";
+import type { LoginRequest } from "@lynkflow/types";
 
 /**
  * TanStack Query mutation, per .claude/rules/api-conventions.md ("use a
@@ -13,7 +13,7 @@ import type { LoginPayload } from "../types/auth.types";
  * hand-rolled state.
  */
 export function useLogin() {
-  return useMutation<void, AuthApiRequestError, LoginPayload>({
+  return useMutation<void, AuthApiRequestError, LoginRequest>({
     mutationFn: async (payload) => {
       await loginApi.login(payload);
       // The landing page belongs to the Shell, but there's nothing to land
