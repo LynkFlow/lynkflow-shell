@@ -66,12 +66,9 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           aria-hidden="true"
           className="h-full w-full object-cover"
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(180deg, rgba(6,46,30,0.1), rgba(6,46,30,0.5))",
-          }}
-        />
+        {/* Flat #00000033 (20% black) scrim over the hero image, per the
+            Figma spec -- not a gradient. */}
+        <div className="absolute inset-0 bg-[#00000033]" />
 
         <div className="absolute inset-0 flex flex-col justify-between p-10 lg:p-14">
           <Logo markColor="white" textColor="white" />
