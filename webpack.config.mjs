@@ -32,6 +32,13 @@ const PORT = Number(process.env.PORT ?? 3000);
 const SCRATCH_REMOTE_URL =
   process.env.SCRATCH_REMOTE_URL ?? "http://localhost:3001/remoteEntry.js";
 
+/**
+ * Base URL of the auth backend the Shell's own login/signup/forgot-password/
+ * reset-password/activate-account screens call. See src/env.ts and
+ * .env.example -- no real backend exists yet, this is scaffolding.
+ */
+const AUTH_API_BASE_URL = process.env.AUTH_API_BASE_URL ?? "/api/auth";
+
 export default (_env, argv) => {
   const isProduction = argv.mode === "production";
 
@@ -72,6 +79,13 @@ export default (_env, argv) => {
           include: /node_modules/,
           use: ["style-loader", "css-loader"],
         },
+        {
+          // Auth screens' logo/hero-panel/success/mail imagery
+          // (src/assets/) -- added alongside those screens; the Shell had no
+          // image imports before this.
+          test: /\.(png|jpe?g|gif|svg)$/i,
+          type: "asset/resource",
+        },
       ],
     },
     plugins: [
@@ -97,7 +111,19 @@ export default (_env, argv) => {
             singleton: true,
             requiredVersion: dependencies["react-router-dom"],
           },
+          // Added when the Shell's own auth screens started using TanStack
+          // Query for their mutations (login/signup/forgot-password/etc.) --
+          // singleton for the same reason as the three above: a duplicated
+          // copy would mean a duplicated, conflicting query cache the moment
+          // a real domain MFE also declares it as a singleton.
+          "@tanstack/react-query": {
+            singleton: true,
+            requiredVersion: dependencies["@tanstack/react-query"],
+          },
         },
+      }),
+      new webpack.DefinePlugin({
+        __AUTH_API_BASE_URL__: JSON.stringify(AUTH_API_BASE_URL),
       }),
       new HtmlWebpackPlugin({
         template: "./public/index.html",

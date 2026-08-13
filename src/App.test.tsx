@@ -68,4 +68,15 @@ describe("App", () => {
 
     expect(screen.getByRole("heading", { name: "Page not found" })).toBeInTheDocument();
   });
+
+  it("renders the Login page at /login", () => {
+    render(
+      <MemoryRouter initialEntries={["/login"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+  });
 });

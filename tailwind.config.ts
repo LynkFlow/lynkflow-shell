@@ -12,7 +12,15 @@ export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      colors: { ...color },
+      colors: {
+        ...color,
+        // Same alias lynkflow-ui-kit's own tailwind.config.ts defines --
+        // enables bg-danger-subtle/text-danger-subtle for the Shell's own
+        // Banner component (src/features/auth/components/common/Banner.tsx),
+        // sourced from the same Figma error-banner frame color.dangerSubtle
+        // already documents (tokens/index.ts).
+        "danger-subtle": color.dangerSubtle,
+      },
       borderRadius: { ...radius, DEFAULT: radius.md },
       fontFamily: {
         sans: [typography.fontFamily.base],

@@ -9,3 +9,12 @@ Object.assign(globalThis, {
 });
 
 import "@testing-library/jest-dom";
+
+// Same pattern as every MFE's own jest.setup.ts: __AUTH_API_BASE_URL__ only
+// exists via webpack's DefinePlugin at build time (see src/env.ts and
+// webpack.config.mjs) -- Jest doesn't run through webpack, so this global is
+// genuinely undefined during a test run without this. A test that needs a
+// different value should `jest.mock("./src/env")` rather than change this.
+Object.assign(globalThis, {
+  __AUTH_API_BASE_URL__: "/api/auth",
+});
