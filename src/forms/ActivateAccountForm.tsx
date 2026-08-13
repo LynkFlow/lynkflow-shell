@@ -2,7 +2,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
-import { PasswordFormInput } from "../components/forms/FormInput";
+import { PasswordFormInput } from "./FormInput";
 import { Checkbox } from "../components/Checkbox";
 import { Banner } from "../components/Banner";
 import PasswordChecklist from "../features/auth/components/PasswordChecklist";
@@ -108,7 +108,11 @@ export default function ActivateAccountForm({
             />
           </div>
 
-          <Button type="submit" isLoading={completeActivation.isPending} className="w-full">
+          <Button
+            type="submit"
+            isLoading={completeActivation.isPending}
+            className="w-full"
+          >
             Activate Account
           </Button>
         </form>

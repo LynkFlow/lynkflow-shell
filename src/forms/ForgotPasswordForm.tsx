@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput } from "../components/forms/FormInput";
+import { FormInput } from "./FormInput";
 import { Banner } from "../components/Banner";
 import { authErrorPresentation } from "../features/auth/constants/errorMessages";
 import { forgotPasswordFormSchema } from "../features/auth/schemas/ForgotPasswordForm.schema";
@@ -16,7 +16,9 @@ interface ForgotPasswordFormProps {
 }
 
 /** GEN-US003 (Forgot Password) -- react-hook-form + zod. */
-export default function ForgotPasswordForm({ forgotPassword }: ForgotPasswordFormProps) {
+export default function ForgotPasswordForm({
+  forgotPassword,
+}: ForgotPasswordFormProps) {
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues: { email: "" },
@@ -53,7 +55,9 @@ export default function ForgotPasswordForm({ forgotPassword }: ForgotPasswordFor
 
           {forgotPassword.error && (
             <Banner
-              variant={authErrorPresentation[forgotPassword.error.code]?.variant ?? "error"}
+              variant={
+                authErrorPresentation[forgotPassword.error.code]?.variant ?? "error"
+              }
               title={
                 authErrorPresentation[forgotPassword.error.code]?.title ??
                 "Something went wrong"

@@ -2,7 +2,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput, PasswordFormInput } from "../components/forms/FormInput";
+import { FormInput, PasswordFormInput } from "./FormInput";
 import { Banner } from "../components/Banner";
 import PasswordChecklist from "../features/auth/components/PasswordChecklist";
 import { useSignup } from "../features/auth/hooks/useSignup";
@@ -43,7 +43,9 @@ export default function SignupForm() {
     <FormProvider {...form}>
       <form
         className="space-y-5"
-        onSubmit={(event) => void handleSubmit((values) => signup.mutate(values))(event)}
+        onSubmit={(event) =>
+          void handleSubmit((values) => signup.mutate(values))(event)
+        }
         noValidate
       >
         <div className="flex flex-col space-y-3">
@@ -106,7 +108,9 @@ export default function SignupForm() {
         )}
 
         <div>
-          <p className="mb-2 text-sm text-neutral-500">Your new password must include:</p>
+          <p className="mb-2 text-sm text-neutral-500">
+            Your new password must include:
+          </p>
           <PasswordChecklist password={password} />
         </div>
 

@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
+import { Logo } from "@lynkflow/ui-kit";
 
-import { Logo } from "../components/Logo";
-import logoDark from "../assets/logo-dark.svg";
-import heroBackground from "../assets/Container.png";
+import heroImage from "../assets/hero-image.png";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -32,35 +31,37 @@ interface AuthLayoutProps {
  *    still looking reasonably centered at the 1024-tall target instead of
  *    jammed against the header.
  * 3. Hero image: a real `<img>` with `object-cover`, not a CSS
- *    `background-image` + `backgroundSize: "100% 100%"`. `Container.png` is
- *    2100x3072 (~0.683 aspect ratio) -- almost exactly the 700x1024 design
- *    box's own ratio (~0.684), so `100% 100%` looked fine ONLY at exactly
- *    1024px tall. At any other real browser window height (i.e. almost
- *    always), the box's aspect ratio drifted away from the image's, and
- *    `100% 100%` stretches non-uniformly to fill it regardless -- the
- *    reported "content inside the image is stretched" bug. `object-cover`
- *    scales uniformly and crops instead, so it never distorts, at any
- *    height. The panel's *width* stays the spec'd fixed 700px either way
- *    (`shrink-0` + `md:w-[700px]`, unrelated to this fix) -- the distorted
- *    image just made the panel's contents look visually oversized/dominant
- *    relative to the form panel, which read as "the image has more space
- *    than the content" even though the box itself was always 700px.
- * 4. No `Logo` above the form panel at `md`+ -- the Figma spec shows the
- *    logo only inside the hero panel (baked into `Container.png` itself,
- *    top-left), not repeated above "Welcome Back". Kept as a `md:hidden`
- *    fallback only, since the hero panel (and its baked-in logo) disappears
- *    below `md` -- without it, a mobile visitor would see no LynkFlow
- *    branding anywhere on the screen.
+ *    `background-image` + `backgroundSize: "100% 100%"`, which stretched
+ *    non-uniformly at any window height other than exactly 1024px.
+ *    `object-cover` scales uniformly and crops instead, so it never
+ *    distorts, at any height.
+ * 4. Hero width is `48%` of the panel, not a fixed `700px` -- 700/1440 is
+ *    ~48.6%, but a fixed pixel value doesn't track the *actual* window
+ *    width the way the Figma's proportional split does, and read as too
+ *    wide at real window sizes. `md:w-[48%]` scales with the panel instead.
+ * 5. `hero-image.png` (the plain background graphic) replaces the earlier
+ *    `Container.png`, which had the LynkFlow wordmark and tagline baked
+ *    into the image pixels themselves. Both are now real DOM content
+ *    layered on top of the image instead -- `@lynkflow/ui-kit`'s `Logo`
+ *    (white mark + white wordmark, the `brand-logo.svg` combination per
+ *    that component's own docs) top-left, and the marketing tagline
+ *    bottom-left, matching the Figma's composition and letting both scale
+ *    and stay crisp instead of being baked into a raster asset.
+ * 6. No `Logo` above the form panel at `md`+ -- the Figma spec shows the
+ *    logo only inside the hero panel, not repeated above "Welcome Back".
+ *    Kept as a `md:hidden` fallback only, since the hero panel disappears
+ *    below `md` and a mobile visitor would otherwise see no branding at
+ *    all -- default (brand mark, dark wordmark) since it sits on white,
+ *    not the hero image.
  */
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="flex h-screen w-full flex-col bg-white md:flex-row">
-      {/* Fixed 700px per the Figma spec, not a fraction of the viewport --
-          a fluid width would grow/shrink the hero image relative to the
-          form panel differently than the design at other viewport widths. */}
-      <div className="relative hidden shrink-0 overflow-hidden md:block md:w-[700px]">
+      {/* 48% of the panel per the Figma spec (700/1440), not a fixed pixel
+          width -- see the docblock's point 4. */}
+      <div className="relative hidden shrink-0 overflow-hidden md:block md:w-[48%]">
         <img
-          src={heroBackground}
+          src={heroImage}
           alt=""
           aria-hidden="true"
           className="h-full w-full object-cover"
@@ -71,12 +72,21 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             background: "linear-gradient(180deg, rgba(6,46,30,0.1), rgba(6,46,30,0.5))",
           }}
         />
+
+        <div className="absolute inset-0 flex flex-col justify-between p-10 lg:p-14">
+          <Logo markColor="white" textColor="white" />
+
+          <p className="max-w-sm text-lg font-medium leading-relaxed text-white">
+            The developer-broker operating system powering Egypt&apos;s real
+            estate market. One link. Every deal.
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-1 items-start justify-center overflow-y-auto px-6 pt-10 pb-10 sm:px-10 md:px-12 md:pt-16 lg:px-16 lg:pt-24">
         <div className="w-full max-w-md">
           <div className="mb-8 flex items-center gap-2 md:hidden">
-            <Logo src={logoDark} />
+            <Logo />
           </div>
           {children}
         </div>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
-import { PasswordFormInput } from "../components/forms/FormInput";
+import { PasswordFormInput } from "./FormInput";
 import { Banner } from "../components/Banner";
 import PasswordChecklist from "../features/auth/components/PasswordChecklist";
 import { authErrorPresentation } from "../features/auth/constants/errorMessages";
@@ -63,7 +63,9 @@ export default function ResetPasswordForm({ resetPassword }: ResetPasswordFormPr
 
           {resetPassword.error && (
             <Banner
-              variant={authErrorPresentation[resetPassword.error.code]?.variant ?? "error"}
+              variant={
+                authErrorPresentation[resetPassword.error.code]?.variant ?? "error"
+              }
               title={
                 authErrorPresentation[resetPassword.error.code]?.title ??
                 "Something went wrong"
@@ -77,7 +79,9 @@ export default function ResetPasswordForm({ resetPassword }: ResetPasswordFormPr
           )}
 
           <div>
-            <p className="mb-2 text-sm text-neutral-500">Your new password must include:</p>
+            <p className="mb-2 text-sm text-neutral-500">
+              Your new password must include:
+            </p>
             <PasswordChecklist password={password} />
           </div>
 

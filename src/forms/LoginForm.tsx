@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Button } from "@lynkflow/ui-kit";
 
-import { FormInput, PasswordFormInput } from "../components/forms/FormInput";
+import { FormInput, PasswordFormInput } from "./FormInput";
 import { Checkbox } from "../components/Checkbox";
 import { Banner } from "../components/Banner";
 import { useLogin } from "../features/auth/hooks/useLogin";
@@ -29,9 +29,7 @@ export default function LoginForm() {
     <FormProvider {...form}>
       <form
         className="space-y-5"
-        onSubmit={(event) =>
-          void handleSubmit((values) => login.mutate(values))(event)
-        }
+        onSubmit={(event) => void handleSubmit((values) => login.mutate(values))(event)}
         noValidate
       >
         <FormInput<LoginFormValues>
@@ -61,7 +59,9 @@ export default function LoginForm() {
         {login.error && (
           <Banner
             variant={authErrorPresentation[login.error.code]?.variant ?? "error"}
-            title={authErrorPresentation[login.error.code]?.title ?? "Something went wrong"}
+            title={
+              authErrorPresentation[login.error.code]?.title ?? "Something went wrong"
+            }
             message={
               login.error.message ??
               authErrorPresentation[login.error.code]?.message ??
