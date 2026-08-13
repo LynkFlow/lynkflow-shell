@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Logo } from "@lynkflow/ui-kit";
 
-import heroImage from "../assets/hero-image.png";
+import heroImage from "../assets/hero-background.jpg";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -77,8 +77,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           <Logo markColor="white" textColor="white" />
 
           <p className="max-w-sm text-lg font-medium leading-relaxed text-white">
-            The developer-broker operating system powering Egypt&apos;s real
-            estate market. One link. Every deal.
+            The developer-broker operating system powering Egypt&apos;s real estate
+            market. One link. Every deal.
           </p>
         </div>
       </div>

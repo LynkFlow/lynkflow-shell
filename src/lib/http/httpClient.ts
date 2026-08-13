@@ -19,19 +19,16 @@
  */
 import axios from "axios";
 import type { AxiosError } from "axios";
+import type { ApiError } from "@lynkflow/types";
 
-/**
- * Normalized error shape every call site can rely on.
- *
- * `fieldErrors` is keyed by field name because business-domain.md requires
- * validation messages to identify the offending field, not just report a flat
- * message -- the UI can't do that without a field key to attach the message to.
- */
-export interface ApiError {
-  status: number;
-  message: string;
-  fieldErrors?: Record<string, string>;
-}
+// `ApiError` itself now lives in @lynkflow/types (src/api/api.types.ts) --
+// it's genuine transport-level infrastructure, not this repo's own concern,
+// so it belongs in the shared package alongside PaginatedResponse<T>
+// (.claude/rules/architecture.md's @lynkflow/types section names both as
+// the canonical "API infrastructure shapes" example). `ApiRequestError`
+// stays local: it's a runtime `Error` subclass with real behavior, not a
+// type, and @lynkflow/types ships types only (`sideEffects: false`, no
+// runtime value -- see that package's own README).
 
 /** Thrown by every request this client makes. Safe to `instanceof` check. */
 export class ApiRequestError extends Error implements ApiError {
