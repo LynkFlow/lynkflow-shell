@@ -1,4 +1,4 @@
-import type { AuthErrorCode } from "../auth.types";
+import type { AuthErrorCode } from "../types/auth.types";
 import type { BannerVariant } from "../../../components/Banner";
 
 interface ErrorPresentation {

@@ -21,7 +21,18 @@ module.exports = {
     "!src/types/**",
     // Real entry point (renders into the DOM), same category as every other
     // repo's bootstrap.tsx -- see that file's own docblock.
+    "!src/app/bootstrap.tsx",
+    // Thin Module Federation async-boundary shim, no branches -- see its
+    // own docblock.
+    "!src/main.tsx",
+    // Superseded, unused re-export stubs left behind by the src/app/ and
+    // src/main.tsx restructure -- could not be deleted in this environment,
+    // see each file's own header comment.
+    "!src/App.tsx",
+    "!src/index.ts",
     "!src/bootstrap.tsx",
+    "!src/env.ts",
+    "!src/api/authClient.ts",
   ],
   // @lynkflow/config/jest/react's floor (80/85/85/85) applies unchanged --
   // no override needed yet.

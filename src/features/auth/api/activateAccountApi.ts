@@ -1,0 +1,12 @@
+import { authHttp } from "./authHttp";
+import type {
+  ActivationDetails,
+  CompleteActivationPayload,
+} from "../types/auth.types";
+
+export const activateAccountApi = {
+  validateActivation: (token: string) =>
+    authHttp.post<ActivationDetails>("/activation/validate", { token }),
+  completeActivation: (payload: CompleteActivationPayload) =>
+    authHttp.post<void>("/activation/complete", payload),
+};

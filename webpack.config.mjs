@@ -34,7 +34,7 @@ const SCRATCH_REMOTE_URL =
 
 /**
  * Base URL of the auth backend the Shell's own login/signup/forgot-password/
- * reset-password/activate-account screens call. See src/env.ts and
+ * reset-password/activate-account screens call. See src/app/config.ts and
  * .env.example -- no real backend exists yet, this is scaffolding.
  */
 const AUTH_API_BASE_URL = process.env.AUTH_API_BASE_URL ?? "/api/auth";
@@ -43,7 +43,7 @@ export default (_env, argv) => {
   const isProduction = argv.mode === "production";
 
   return {
-    entry: "./src/index.ts",
+    entry: "./src/main.tsx",
     mode: argv.mode ?? "development",
     devtool: isProduction ? "source-map" : "eval-source-map",
     output: {

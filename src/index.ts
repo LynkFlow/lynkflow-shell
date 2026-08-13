@@ -1,11 +1,6 @@
-/**
- * Module Federation async boundary. Same reasoning as every MFE's
- * src/index.ts: webpack needs the shared scope (react, react-dom,
- * react-router-dom) initialized before any shared module is evaluated, and a
- * dynamic import creates that boundary. The Shell needs this too, even
- * though it's the host and not a remote -- it's still negotiating shared
- * singleton versions with whatever remotes it loads.
- */
-void import("./bootstrap");
-
+// MOVED -- superseded by src/main.tsx as part of the src/main.tsx entry
+// rename. It could not be deleted from this environment (a filesystem
+// restriction on this specific mount blocks file deletion); it is unused
+// (webpack.config.mjs's `entry` now points at ./src/main.tsx) and safe to
+// `git rm` manually.
 export {};
