@@ -5,11 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
 import { FormInput } from "../../../forms/FormInput";
-import Banner from "./common/Banner";
+import { Banner } from "../../../components/Banner";
 import { authErrorPresentation } from "../constants/errorMessages";
 import { forgotPasswordFormSchema } from "./ForgotPasswordForm.schema";
 import type { ForgotPasswordFormValues } from "./ForgotPasswordForm.schema";
-import type { useForgotPassword } from "../hooks/useForgotPassword";
+import type { useForgotPassword } from "./useForgotPassword";
 
 interface ForgotPasswordFormProps {
   forgotPassword: ReturnType<typeof useForgotPassword>;

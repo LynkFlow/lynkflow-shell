@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { authClient } from "../../../api/authClient";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import { forgotPasswordApi } from "../../../api/auth/forgotPasswordApi";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 import type { ForgotPasswordPayload } from "../auth.types";
 
 export function useForgotPassword() {
   return useMutation<void, AuthApiRequestError, ForgotPasswordPayload>({
-    mutationFn: (payload) => authClient.forgotPassword(payload),
+    mutationFn: (payload) => forgotPasswordApi.forgotPassword(payload),
   });
 }

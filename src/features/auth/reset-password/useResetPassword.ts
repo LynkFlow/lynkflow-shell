@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { authClient } from "../../../api/authClient";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import { resetPasswordApi } from "../../../api/auth/resetPasswordApi";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 import type { ResetPasswordPayload } from "../auth.types";
 
 type TokenState = "checking" | "valid" | "invalid";
@@ -23,7 +23,7 @@ export function useResetPassword() {
 
   useEffect(() => {
     let cancelled = false;
-    authClient
+    resetPasswordApi
       .validateResetToken(token)
       .then(() => {
         if (!cancelled) setTokenState("valid");
@@ -44,7 +44,7 @@ export function useResetPassword() {
     AuthApiRequestError,
     Omit<ResetPasswordPayload, "token">
   >({
-    mutationFn: (payload) => authClient.resetPassword({ token, ...payload }),
+    mutationFn: (payload) => resetPasswordApi.resetPassword({ token, ...payload }),
   });
 
   return { tokenState, tokenError, resetPassword };

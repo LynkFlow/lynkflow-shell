@@ -3,14 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
 import { PasswordFormInput } from "../../../forms/FormInput";
-import Checkbox from "./common/Checkbox";
-import Banner from "./common/Banner";
-import PasswordChecklist from "./common/PasswordChecklist";
+import { Checkbox } from "../../../components/Checkbox";
+import { Banner } from "../../../components/Banner";
+import PasswordChecklist from "../components/PasswordChecklist";
 import { authErrorPresentation } from "../constants/errorMessages";
 import { activateAccountFormSchema } from "./ActivateAccountForm.schema";
 import type { ActivateAccountFormValues } from "./ActivateAccountForm.schema";
 import type { ActivationDetails } from "../auth.types";
-import type { useActivateAccount } from "../hooks/useActivateAccount";
+import type { useActivateAccount } from "./useActivateAccount";
 
 interface ActivateAccountFormProps {
   details: ActivationDetails;

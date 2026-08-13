@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { authClient } from "../../../api/authClient";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import { activateAccountApi } from "../../../api/auth/activateAccountApi";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 import type { ActivationDetails, CompleteActivationPayload } from "../auth.types";
 
 type Step = "loading" | "form" | "success" | "tokenError";
@@ -29,7 +29,7 @@ export function useActivateAccount() {
 
   useEffect(() => {
     let cancelled = false;
-    authClient
+    activateAccountApi
       .validateActivation(token)
       .then((result) => {
         if (!cancelled) {
@@ -53,7 +53,7 @@ export function useActivateAccount() {
     AuthApiRequestError,
     Omit<CompleteActivationPayload, "token">
   >({
-    mutationFn: (payload) => authClient.completeActivation({ token, ...payload }),
+    mutationFn: (payload) => activateAccountApi.completeActivation({ token, ...payload }),
     onSuccess: () => setStep("success"),
   });
 

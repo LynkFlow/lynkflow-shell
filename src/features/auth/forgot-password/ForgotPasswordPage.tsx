@@ -1,7 +1,7 @@
 import AuthLayout from "../components/AuthLayout";
-import ForgotPasswordForm from "../components/ForgotPasswordForm";
-import CheckEmailNotice from "../components/CheckEmailNotice";
-import { useForgotPassword } from "../hooks/useForgotPassword";
+import ForgotPasswordForm from "./ForgotPasswordForm";
+import CheckEmailNotice from "./CheckEmailNotice";
+import { useForgotPassword } from "./useForgotPassword";
 
 export default function ForgotPasswordPage() {
   const forgotPassword = useForgotPassword();

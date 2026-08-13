@@ -5,7 +5,14 @@ import {
   LockKeyhole,
   PauseCircleIcon,
 } from "lucide-react";
-import type { BannerVariant } from "../../constants/errorMessages";
+
+/**
+ * Owned here, not by the auth feature -- Banner moved to src/components
+ * (generic/reusable, not auth-specific) so its own variant type shouldn't
+ * depend on anything under features/auth. `errorMessages.ts` imports this
+ * type FROM here, not the other way around.
+ */
+export type BannerVariant = "error" | "warning" | "success";
 
 interface BannerProps {
   variant: BannerVariant;
@@ -17,8 +24,11 @@ interface BannerProps {
 /**
  * Not a `@lynkflow/ui-kit` component -- there's no Banner/Alert in the
  * ui-kit yet, so this stays local per the instruction to leave anything not
- * already in the toolkit as-is. The one adaptation made here: the error
- * variant's colors now come from real ui-kit tokens (`color.danger` /
+ * already in the toolkit as-is. Genuinely reusable outside the auth feature
+ * (any domain can show a success/warning/error banner), which is why it
+ * lives in src/components rather than features/auth/components. The one
+ * adaptation made from the reference implementation: the error variant's
+ * colors now come from real ui-kit tokens (`color.danger` /
  * `color.dangerSubtle`) instead of hardcoded hex -- those two ARE already in
  * the ui-kit, and it turns out they were sourced from the exact same Figma
  * frame ("Login/ locked account") this banner is for
@@ -53,7 +63,7 @@ const variantStyles: Record<
   },
 };
 
-export default function Banner({ variant, title, message, details }: BannerProps) {
+export function Banner({ variant, title, message, details }: BannerProps) {
   const { container, icon, sidebar } = variantStyles[variant];
 
   const Icon: typeof AlertCircle =

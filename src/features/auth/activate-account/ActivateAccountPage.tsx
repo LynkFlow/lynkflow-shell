@@ -1,8 +1,8 @@
 import AuthLayout from "../components/AuthLayout";
-import ActivateAccountForm from "../components/ActivateAccountForm";
-import ActivationTokenError from "../components/ActivationTokenError";
-import ActivationSuccess from "../components/ActivationSuccess";
-import { useActivateAccount } from "../hooks/useActivateAccount";
+import ActivateAccountForm from "./ActivateAccountForm";
+import ActivationTokenError from "./ActivationTokenError";
+import ActivationSuccess from "./ActivationSuccess";
+import { useActivateAccount } from "./useActivateAccount";
 
 export default function ActivateAccountPage() {
   const { step, details, tokenError, completeActivation } = useActivateAccount();

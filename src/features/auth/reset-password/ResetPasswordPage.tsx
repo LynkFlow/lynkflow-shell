@@ -1,8 +1,8 @@
 import AuthLayout from "../components/AuthLayout";
-import ResetPasswordForm from "../components/ResetPasswordForm";
-import ResetPasswordError from "../components/ResetPasswordError";
-import ResetPasswordSuccess from "../components/ResetPasswordSuccess";
-import { useResetPassword } from "../hooks/useResetPassword";
+import ResetPasswordForm from "./ResetPasswordForm";
+import ResetPasswordError from "./ResetPasswordError";
+import ResetPasswordSuccess from "./ResetPasswordSuccess";
+import { useResetPassword } from "./useResetPassword";
 
 export default function ResetPasswordPage() {
   const { tokenState, tokenError, resetPassword } = useResetPassword();

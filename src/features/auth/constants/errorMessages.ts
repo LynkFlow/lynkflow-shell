@@ -1,6 +1,5 @@
 import type { AuthErrorCode } from "../auth.types";
-
-export type BannerVariant = "error" | "warning" | "success";
+import type { BannerVariant } from "../../../components/Banner";
 
 interface ErrorPresentation {
   variant: BannerVariant;

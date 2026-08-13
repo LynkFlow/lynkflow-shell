@@ -24,17 +24,17 @@
  *    not a real domain -- see webpack.config.mjs and README.md.
  */
 import { lazy } from "react";
-import { Link, Route, Routes as RouterRoutes } from "react-router-dom";
+import { Link, Outlet, Route, Routes as RouterRoutes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { RouteBoundary } from "./components/RouteBoundary/index";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import LoginPage from "./features/auth/pages/LoginPage";
-import SignupPage from "./features/auth/pages/SignupPage";
-import ForgotPasswordPage from "./features/auth/pages/ForgotPasswordPage";
-import ResetPasswordPage from "./features/auth/pages/ResetPasswordPage";
-import ActivateAccountPage from "./features/auth/pages/ActivateAccountPage";
+import LoginPage from "./features/auth/login/LoginPage";
+import SignupPage from "./features/auth/signup/SignupPage";
+import ForgotPasswordPage from "./features/auth/forgot-password/ForgotPasswordPage";
+import ResetPasswordPage from "./features/auth/reset-password/ResetPasswordPage";
+import ActivateAccountPage from "./features/auth/activate-account/ActivateAccountPage";
 
 // "scratch/App" resolves at runtime via Module Federation (see
 // webpack.config.mjs's `remotes`); src/types/federation.d.ts gives it a type
@@ -52,60 +52,62 @@ const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Layout for the Shell's own dev-only screens (Home, the federation smoke
+ * test, 404) -- the plain nav bar with Home/Login/Scratch links.
+ *
+ * Auth screens do NOT use this layout. They're real, standalone pre-session
+ * screens (auth.md) -- AuthLayout supplies their own logo, and a second
+ * "LynkFlow" nav bar stacked above it duplicates that branding and eats
+ * vertical space the 1440x1024 no-scroll design doesn't have room for. Only
+ * this dev-only shell chrome wraps in the nav; auth routes render bare.
+ */
+function DevShellLayout() {
+  return (
+    <div className="min-h-screen bg-white text-neutral-900">
+      <header className="border-b border-neutral-200 px-6 py-4">
+        <nav className="flex items-center gap-6 text-sm">
+          <span className="font-semibold">LynkFlow</span>
+          <Link to="/" className="hover:underline">
+            Home
+          </Link>
+          <Link to="/login" className="hover:underline">
+            Login
+          </Link>
+          <Link to="/scratch" className="hover:underline">
+            Scratch (federation smoke test)
+          </Link>
+        </nav>
+      </header>
+      <main className="p-6">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-white text-neutral-900">
-        <header className="border-b border-neutral-200 px-6 py-4">
-          <nav className="flex items-center gap-6 text-sm">
-            <span className="font-semibold">LynkFlow</span>
-            <Link to="/" className="hover:underline">
-              Home
-            </Link>
-            <Link to="/login" className="hover:underline">
-              Login
-            </Link>
-            <Link to="/scratch" className="hover:underline">
-              Scratch (federation smoke test)
-            </Link>
-          </nav>
-        </header>
-        <main>
-          <RouterRoutes>
-            <Route
-              index
-              element={
-                <div className="p-6">
-                  <HomePage />
-                </div>
-              }
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/activate-account" element={<ActivateAccountPage />} />
-            <Route
-              path="/scratch/*"
-              element={
-                <div className="p-6">
-                  <RouteBoundary>
-                    <ScratchApp language="en" />
-                  </RouteBoundary>
-                </div>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <div className="p-6">
-                  <NotFoundPage />
-                </div>
-              }
-            />
-          </RouterRoutes>
-        </main>
-      </div>
+      <RouterRoutes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/activate-account" element={<ActivateAccountPage />} />
+        <Route element={<DevShellLayout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="/scratch/*"
+            element={
+              <RouteBoundary>
+                <ScratchApp language="en" />
+              </RouteBoundary>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </RouterRoutes>
     </QueryClientProvider>
   );
 }

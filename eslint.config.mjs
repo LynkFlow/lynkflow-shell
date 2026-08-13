@@ -7,14 +7,18 @@ import react from "@lynkflow/config/eslint/react";
  * Thin extends of the shared React ESLint layer. Only two things are
  * specific to this repo: the webpack DefinePlugin build global (PORT isn't
  * injected, but the smoke-test remote URL is -- see webpack.config.mjs) and
- * the jest.setup.ts default-project allowance. Everything else
- * (recommendedTypeChecked, react-hooks, .cjs/.config overrides, test-file
- * exceptions) lives in @lynkflow/config -- don't re-add it here.
+ * the default-project allowance for root-level/non-.ts files outside
+ * tsconfig's `include` globs (`jest.setup.ts`, and `src/test/fileMock.cjs` --
+ * a plain .cjs Jest moduleNameMapper stub for image imports, which
+ * TypeScript's default include for a bare "src" glob doesn't pick up since
+ * allowJs isn't set). Everything else (recommendedTypeChecked, react-hooks,
+ * .cjs/.config overrides, test-file exceptions) lives in @lynkflow/config --
+ * don't re-add it here.
  */
 export default [
   ...react({
     tsconfigRootDir: import.meta.dirname,
-    allowDefaultProject: ["jest.setup.ts"],
+    allowDefaultProject: ["jest.setup.ts", "src/test/fileMock.cjs"],
   }),
 
   // This repo consumes @lynkflow/config from the REAL published registry

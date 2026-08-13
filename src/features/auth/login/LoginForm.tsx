@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@lynkflow/ui-kit";
 
 import { FormInput, PasswordFormInput } from "../../../forms/FormInput";
-import Checkbox from "./common/Checkbox";
-import Banner from "./common/Banner";
-import { useLogin } from "../hooks/useLogin";
+import { Checkbox } from "../../../components/Checkbox";
+import { Banner } from "../../../components/Banner";
+import { useLogin } from "./useLogin";
 import { authErrorPresentation } from "../constants/errorMessages";
 import { loginFormSchema } from "./LoginForm.schema";
 import type { LoginFormValues } from "./LoginForm.schema";

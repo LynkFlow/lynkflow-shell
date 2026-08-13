@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { authClient } from "../../../api/authClient";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import { loginApi } from "../../../api/auth/loginApi";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 import type { LoginPayload } from "../auth.types";
 
 /**
@@ -15,7 +15,7 @@ import type { LoginPayload } from "../auth.types";
 export function useLogin() {
   return useMutation<void, AuthApiRequestError, LoginPayload>({
     mutationFn: async (payload) => {
-      await authClient.login(payload);
+      await loginApi.login(payload);
       // The landing page belongs to the Shell, but there's nothing to land
       // on yet (no post-login dashboard built -- .claude/rules/progress.md).
       // A full document navigation, not React Router, since a real session

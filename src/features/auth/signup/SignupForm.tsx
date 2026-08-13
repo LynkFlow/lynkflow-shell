@@ -3,9 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@lynkflow/ui-kit";
 
 import { FormInput, PasswordFormInput } from "../../../forms/FormInput";
-import Banner from "./common/Banner";
-import PasswordChecklist from "./common/PasswordChecklist";
-import { useSignup } from "../hooks/useSignup";
+import { Banner } from "../../../components/Banner";
+import PasswordChecklist from "../components/PasswordChecklist";
+import { useSignup } from "./useSignup";
 import { authErrorPresentation } from "../constants/errorMessages";
 import { signupFormSchema } from "./SignupForm.schema";
 import type { SignupFormValues } from "./SignupForm.schema";

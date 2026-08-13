@@ -5,12 +5,12 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@lynkflow/ui-kit";
 
 import { PasswordFormInput } from "../../../forms/FormInput";
-import Banner from "./common/Banner";
-import PasswordChecklist from "./common/PasswordChecklist";
+import { Banner } from "../../../components/Banner";
+import PasswordChecklist from "../components/PasswordChecklist";
 import { authErrorPresentation } from "../constants/errorMessages";
 import { resetPasswordFormSchema } from "./ResetPasswordForm.schema";
 import type { ResetPasswordFormValues } from "./ResetPasswordForm.schema";
-import type { useResetPassword } from "../hooks/useResetPassword";
+import type { useResetPassword } from "./useResetPassword";
 
 interface ResetPasswordFormProps {
   resetPassword: ReturnType<typeof useResetPassword>["resetPassword"];

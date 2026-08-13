@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { passwordRules } from "../../constants/passwordPolicy";
+import { passwordRules } from "../constants/passwordPolicy";
 
 interface PasswordChecklistProps {
   password: string;

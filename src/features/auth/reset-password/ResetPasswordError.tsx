@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@lynkflow/ui-kit";
 
-import Banner from "./common/Banner";
+import { Banner } from "../../../components/Banner";
 import { authErrorPresentation } from "../constants/errorMessages";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 
 interface ResetPasswordErrorProps {
   error: AuthApiRequestError;

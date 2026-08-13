@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-import Banner from "./common/Banner";
+import { Banner } from "../../../components/Banner";
 import { authErrorPresentation } from "../constants/errorMessages";
-import type { AuthApiRequestError } from "../../../api/authClient";
+import type { AuthApiRequestError } from "../../../api/auth/authHttp";
 
 interface ActivationTokenErrorProps {
   error: AuthApiRequestError;

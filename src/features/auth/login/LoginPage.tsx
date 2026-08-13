@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import AuthLayout from "../components/AuthLayout";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "./LoginForm";
 
 export default function LoginPage() {
   return (
