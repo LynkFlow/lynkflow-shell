@@ -13,16 +13,7 @@ export interface RouteBoundaryProps {
   onError?: (error: unknown, info: ErrorInfo) => void;
 }
 
-/**
- * Same component/contract as lynkflow-mfe-template's RouteBoundary
- * (.claude/rules/routing-loading-errors.md) -- ErrorBoundary + Suspense with
- * configurable fallbacks. The Shell needs its own copy for the same reason
- * every MFE does: this wraps how the SHELL handles a remote failing to load
- * or crashing on mount (layer 1 of that rule file's "three layers"), which
- * is a distinct concern from an MFE wrapping its own internal subtree
- * (layer 2) -- both repos need the primitive, neither imports it from the
- * other (.claude/rules/architecture.md's no-cross-repo-source-import rule).
- */
+/** ErrorBoundary + Suspense with configurable fallbacks, for wrapping a federated remote (routing-loading-errors.md). */
 export function RouteBoundary({
   children,
   fallback = ErrorFallback,

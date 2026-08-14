@@ -31,11 +31,7 @@ export default function SignupForm() {
     },
   });
   const { handleSubmit, register, control } = form;
-  // useWatch, not form.watch() -- watch() returns a plain function React's
-  // compiler can't safely memoize (react-hooks/incompatible-library warning,
-  // would fail pre-commit's --max-warnings=0). useWatch is the
-  // memoization-safe equivalent for exactly this "re-render on this field's
-  // value" case.
+  // useWatch, not form.watch() -- watch() isn't safely memoizable by React's compiler.
   const accountType = useWatch({ control, name: "accountType" });
   const password = useWatch({ control, name: "password" });
 
@@ -63,9 +59,6 @@ export default function SignupForm() {
                   value={option.value}
                   {...register("accountType")}
                 />
-                {/* White dot on the filled state -- the reference used an
-                    amber-50 dot, which is nearly invisible against the
-                    primary-500 fill; corrected to white for contrast. */}
                 <span
                   className={`h-2.5 w-2.5 rounded-full ${
                     accountType === option.value ? "bg-white" : "bg-transparent"

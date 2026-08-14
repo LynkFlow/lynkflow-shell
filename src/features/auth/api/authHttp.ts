@@ -1,22 +1,11 @@
 /**
- * Shared axios plumbing for every auth endpoint file in this folder
- * (loginApi.ts, signupApi.ts, forgotPasswordApi.ts, resetPasswordApi.ts,
- * activateAccountApi.ts). One axios instance + one response interceptor
- * that normalizes the real backend's envelope
- * (`{success,data,message}` / `{error:{code,message,data}}`) into
- * `AuthApiRequestError`, so every endpoint file below just calls
- * `authHttp.post(...)` and gets back the unwrapped `data`, or a thrown
- * `AuthApiRequestError` -- no per-call error parsing.
+ * Shared axios plumbing for every auth endpoint file in this folder. One
+ * axios instance + one response interceptor that normalizes the backend's
+ * envelope into `AuthApiRequestError`, so each endpoint just calls
+ * `authHttp.post(...)` and gets back unwrapped data or a thrown error.
  *
- * Doesn't build on ../httpClient.ts's generic `createApiClient` -- that
- * factory assumes a `{ message, fieldErrors? }` error shape, and the real
- * auth backend's contract (inherited from the reference implementation this
- * was migrated from) doesn't fit it; see httpClient.ts's own header. This
- * file is the axios equivalent of that same "domain-specific request
- * wrapper" decision, just for this domain.
- *
- * No real backend exists yet (.claude/rules/progress.md) -- this is
- * scaffolding against the contract the reference implementation assumed.
+ * Doesn't use `../httpClient.ts`'s `createApiClient` -- that assumes a
+ * `{ message, fieldErrors? }` error shape that doesn't fit auth's contract.
  */
 import axios from "axios";
 import type { AxiosError } from "axios";

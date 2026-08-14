@@ -8,17 +8,7 @@ import type { CompleteActivationRequest, ValidateActivationResponse } from "@lyn
 
 type Step = "loading" | "form" | "success" | "tokenError";
 
-/**
- * Corrected against the reference implementation, not a straight port: that
- * version's `useActivateAccount` called `completeActivation` immediately on
- * mount with a hardcoded password-less payload, which meant
- * `ActivateAccountForm` (password + terms/privacy checkboxes) was built but
- * never actually reachable -- `validateActivation` (which returns the
- * `ValidateActivationResponse` that form needs to render the account's email/terms
- * version) was never called either. This wires the two together the way
- * `@lynkflow/types`' own `CompleteActivationRequest` shape implies:
- * validate the token first, show the real form, submit it for real.
- */
+/** Validates the activation token on mount, then lets the form submit `completeActivation`. */
 export function useActivateAccount() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") ?? "";

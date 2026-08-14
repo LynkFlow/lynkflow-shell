@@ -11,12 +11,7 @@ import { authErrorPresentation } from "../features/auth/constants/errorMessages"
 import { loginFormSchema } from "../features/auth/schemas/LoginForm.schema";
 import type { LoginFormValues } from "../features/auth/schemas/LoginForm.schema";
 
-/**
- * GEN-US002 (Login). react-hook-form + zod, per .claude/rules/forms.md --
- * the reference implementation used raw useState per field; this replaces
- * that with the platform's standard FormInput/schema pattern (same as
- * lynkflow-mfe-template's ExampleForm).
- */
+/** GEN-US002 (Login). react-hook-form + zod, per forms.md. */
 export default function LoginForm() {
   const login = useLogin();
   const form = useForm<LoginFormValues>({

@@ -1,13 +1,7 @@
 import type { FallbackProps } from "react-error-boundary";
 import { Button } from "@lynkflow/ui-kit";
 
-/**
- * TEMPORARY LOCAL COPY -- same situation as lynkflow-mfe-template's
- * ErrorFallback (see that file's own docblock). Belongs in @lynkflow/ui-kit
- * per .claude/rules/routing-loading-errors.md; lives here only because
- * ui-kit@0.1.0 doesn't ship it yet. Delete this folder and import from the
- * package once it does -- don't let two hand-maintained copies drift.
- */
+// Temporary local copy -- belongs in @lynkflow/ui-kit once it ships one.
 export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   const message = error instanceof Error ? error.message : String(error);
 

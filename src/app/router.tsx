@@ -1,18 +1,7 @@
 /**
- * The Shell's route tree.
- *
- * This is the Shell's "MFE registry" architecture.md refers to: the mapping
- * from a URL prefix to a lazily-loaded remote's `./App`. It lives here, in
- * the Shell's own source -- not a shared package, since only the Shell ever
- * needs the full map (.claude/rules/architecture.md, .claude/rules/
- * routing-loading-errors.md).
- *
- * Auth screens (login/signup/forgot-password/reset-password/
- * activate-account) are Shell-owned pre-session screens per
- * .claude/rules/auth.md's Shell-owns-login-and-session contract --
- * GEN-US001/002/006/009 have no domain MFE mounted yet, so they render
- * here, not in a domain `*-ui`. They sit outside ShellLayout's nav-bar
- * wrapper -- see layouts/ShellLayout.tsx's header comment for why.
+ * The Shell's route tree -- its MFE registry (URL prefix -> remote `./App`).
+ * Auth screens are Shell-owned pre-session screens (auth.md) and sit outside
+ * ShellLayout's nav-bar wrapper.
  */
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
@@ -27,10 +16,7 @@ import ForgotPasswordPage from "../features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../features/auth/pages/ResetPasswordPage";
 import ActivateAccountPage from "../features/auth/pages/ActivateAccountPage";
 
-// "scratch/App" resolves at runtime via Module Federation (see
-// webpack.config.mjs's `remotes`); src/types/federation.d.ts gives it a type
-// so this compiles. Real domains get the same treatment per remote, or a
-// generated type once a real contract mechanism exists for it.
+// Resolves at runtime via Module Federation; typed by src/types/federation.d.ts.
 const ScratchApp = lazy(() => import("scratch/App"));
 
 export function AppRouter() {

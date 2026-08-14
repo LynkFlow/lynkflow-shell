@@ -8,24 +8,9 @@ type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 };
 
 /**
- * Not a `@lynkflow/ui-kit` component -- no Checkbox in the ui-kit yet, so
- * this stays local (moved to src/components since it's generic, not
- * auth-specific).
- *
- * Rebuilt from the original `appearance-none` + `checked:` version, which
- * didn't reliably toggle/render -- that approach styled the native
- * `<input>` directly, and a couple of things about it were fragile (a
- * background-image data URI applied unconditionally, relying on
- * `checked:bg-*` alone to make it visible). This uses the same
- * visually-hidden-input + `has-[:checked]:` pattern already proven
- * elsewhere in this repo (SignupForm's role radio buttons): a real,
- * clickable, absolutely-positioned `<input type="checkbox">` with
- * `opacity-0`, a sibling box styled via `has-[:checked]:` on its own
- * classes, and a `lucide-react` `Check` icon shown via
- * `group-has-[:checked]:opacity-100`. Native toggle behavior, so
- * react-hook-form's `{...register("field")}` spread (which needs `ref`,
- * `onChange`, `onBlur`, `name` reaching the real `<input>`) works
- * unchanged.
+ * Not a `@lynkflow/ui-kit` component yet. Visually-hidden real `<input>` +
+ * `has-[:checked]:` styling on a sibling box, so native toggle behavior (and
+ * react-hook-form's `register()`) keeps working unchanged.
  */
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
   { label, className, ...rest },

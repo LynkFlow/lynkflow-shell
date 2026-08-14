@@ -6,12 +6,7 @@ import {
   PauseCircleIcon,
 } from "lucide-react";
 
-/**
- * Owned here, not by the auth feature -- Banner moved to src/components
- * (generic/reusable, not auth-specific) so its own variant type shouldn't
- * depend on anything under features/auth. `errorMessages.ts` imports this
- * type FROM here, not the other way around.
- */
+/** Not `@lynkflow/ui-kit`-owned yet (no Banner/Alert there); genuinely reusable outside auth, so it lives in src/components. */
 export type BannerVariant = "error" | "warning" | "success";
 
 interface BannerProps {
@@ -21,24 +16,6 @@ interface BannerProps {
   details?: string[];
 }
 
-/**
- * Not a `@lynkflow/ui-kit` component -- there's no Banner/Alert in the
- * ui-kit yet, so this stays local per the instruction to leave anything not
- * already in the toolkit as-is. Genuinely reusable outside the auth feature
- * (any domain can show a success/warning/error banner), which is why it
- * lives in src/components rather than features/auth/components. The one
- * adaptation made from the reference implementation: the error variant's
- * colors now come from real ui-kit tokens (`color.danger` /
- * `color.dangerSubtle`) instead of hardcoded hex -- those two ARE already in
- * the ui-kit, and it turns out they were sourced from the exact same Figma
- * frame ("Login/ locked account") this banner is for
- * (lynkflow-ui-kit/src/tokens/index.ts), so the hardcoded `#FEE4E2`/`#B42318`
- * this had were literally duplicating `dangerSubtle`/`danger` by coincidence.
- * `warning`/`success` have no light "subtle" background tint tokenized yet
- * (`color.warning`/`color.success` are single flat values, not a ramp) --
- * left on Tailwind's own amber/green scale, same as the reference
- * implementation, until the ui-kit adds one.
- */
 const variantStyles: Record<
   BannerVariant,
   { container: string; icon: string; Icon: typeof AlertCircle; sidebar: string }
