@@ -21,3 +21,14 @@ declare module "scratch/App" {
   const App: ComponentType<RemoteAppProps>;
   export default App;
 }
+
+declare module "auth/App" {
+  import type { ComponentType } from "react";
+
+  export interface RemoteAppProps {
+    language?: string;
+  }
+
+  const App: ComponentType<RemoteAppProps>;
+  export default App;
+}
