@@ -46,7 +46,7 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "LynkFlow Shell" })).toBeInTheDocument();
   });
 
-  it("renders the layout nav on every route", () => {
+  it("renders the layout nav on a non-auth route", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <App />
@@ -79,6 +79,18 @@ describe("App", () => {
     );
 
     expect(await screen.findByText("auth remote mock")).toBeInTheDocument();
+  });
+
+  it("omits the Shell's own nav on an /auth route -- auth-ui's AuthLayout is a standalone full-page view", async () => {
+    render(
+      <MemoryRouter initialEntries={["/auth/login"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("auth remote mock");
+    expect(screen.queryByText("LynkFlow")).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Home" })).not.toBeInTheDocument();
   });
 
   it("renders the not-found page for an unknown route", () => {

@@ -19,7 +19,7 @@
  *    see webpack.config.mjs and README.md.
  */
 import { lazy } from "react";
-import { Link, Route, Routes as RouterRoutes } from "react-router-dom";
+import { Link, Route, Routes as RouterRoutes, useLocation } from "react-router-dom";
 
 import { RouteBoundary } from "./components/RouteBoundary/index";
 import HomePage from "./pages/HomePage";
@@ -39,7 +39,47 @@ import NotFoundPage from "./pages/NotFoundPage";
 const ScratchApp = lazy(() => import("scratch/App"));
 const AuthApp = lazy(() => import("auth/App"));
 
+function Routes() {
+  return (
+    <RouterRoutes>
+      <Route index element={<HomePage />} />
+      <Route
+        path="/auth/*"
+        element={
+          <RouteBoundary>
+            <AuthApp language="en" />
+          </RouteBoundary>
+        }
+      />
+      <Route
+        path="/scratch/*"
+        element={
+          <RouteBoundary>
+            <ScratchApp language="en" />
+          </RouteBoundary>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </RouterRoutes>
+  );
+}
+
 export default function App() {
+  // Pre-session auth screens (auth-ui's own AuthLayout) are a full-page
+  // view by design -- they render their own complete layout, hero panel
+  // included, and showing the Shell's persistent nav above a login screen
+  // is both visually wrong and lets an unauthenticated visitor navigate
+  // around the app from what's supposed to be a standalone screen.
+  const isAuthRoute = useLocation().pathname.startsWith("/auth");
+
+  if (isAuthRoute) {
+    return (
+      <div className="min-h-screen bg-white text-neutral-900">
+        <Routes />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <header className="border-b border-neutral-200 px-6 py-4">
@@ -57,26 +97,7 @@ export default function App() {
         </nav>
       </header>
       <main className="p-6">
-        <RouterRoutes>
-          <Route index element={<HomePage />} />
-          <Route
-            path="/auth/*"
-            element={
-              <RouteBoundary>
-                <AuthApp language="en" />
-              </RouteBoundary>
-            }
-          />
-          <Route
-            path="/scratch/*"
-            element={
-              <RouteBoundary>
-                <ScratchApp language="en" />
-              </RouteBoundary>
-            }
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </RouterRoutes>
+        <Routes />
       </main>
     </div>
   );
