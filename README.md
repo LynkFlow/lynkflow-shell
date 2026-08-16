@@ -67,6 +67,22 @@ and `@lynkflow/ui-kit@0.1.1` are actually published (`progress.md`'s
 publishing queue) -- at that point this becomes a real dependency install
 like any other npm package, no sibling repos or manual builds required.
 
+## Run the whole local workspace
+
+After installing dependencies in all four repositories, create `.env` files
+from `.env.example` in `auth-svc` and `notifications-svc` and enter the real
+database, JWT, and SMTP values. Then run this from `lynkflow-shell`:
+
+```bash
+npm run dev:all
+```
+
+This starts the Shell on `3000`, `auth-ui` on `3002`, `auth-svc` on `4000`,
+and `notifications-svc` on `3010`. Press Ctrl+C once to stop the group. The
+launcher checks for missing dependencies and service environment files before
+starting, so configuration errors are reported together instead of as several
+interleaved process failures.
+
 ## Federation smoke test
 
 There is no real domain MFE yet -- `lynkflow-users-ui` is step 12 in

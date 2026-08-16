@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "webpack serve --mode development",
+    "dev:all": "node scripts/dev-all.mjs",
     "build": "webpack --mode production",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@lynkflow/ui-kit": "^0.1.4",
+    "cross-spawn": "^7.0.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-error-boundary": "^6.0.0",
