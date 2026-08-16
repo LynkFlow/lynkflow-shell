@@ -105,15 +105,56 @@ if (errors.length > 0) {
 
 startLocalDatabase();
 
-const children = applications.map((application) => {
+// --- Prefixed, color-coded logging for every service -----------------------
+
+// Cycle through a palette of ANSI colors so each service gets its own color.
+const ANSI_COLORS = [
+  "\x1b[36m", // cyan
+  "\x1b[35m", // magenta
+  "\x1b[33m", // yellow
+  "\x1b[32m", // green
+  "\x1b[34m", // blue
+  "\x1b[91m", // bright red
+];
+const ANSI_RESET = "\x1b[0m";
+const useColor = process.stdout.isTTY;
+
+const longestNameLength = Math.max(...applications.map((application) => application.name.length));
+
+function makePrefixer(name, color) {
+  const label = name.padEnd(longestNameLength, " ");
+  const prefix = useColor ? `${color}[${label}]${ANSI_RESET} ` : `[${label}] `;
+  let buffer = "";
+
+  return (chunk, writeStream) => {
+    buffer += chunk.toString();
+    const lines = buffer.split("\n");
+    // Keep the last (possibly incomplete) line in the buffer.
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      writeStream.write(`${prefix}${line}\n`);
+    }
+  };
+}
+
+const children = applications.map((application, index) => {
+  const color = ANSI_COLORS[index % ANSI_COLORS.length];
   console.log(`[${application.name}] starting in ${application.directory}`);
-  return spawn(npmCommand, ["run", "dev"], {
+
+  const child = spawn(npmCommand, ["run", "dev"], {
     cwd: application.directory,
     env: { ...process.env, ...application.env },
-    stdio: "inherit",
+    stdio: ["inherit", "pipe", "pipe"],
     windowsHide: true,
     shell: process.platform === "win32",
   });
+
+  const handleStdout = makePrefixer(application.name, color);
+  const handleStderr = makePrefixer(application.name, color);
+  child.stdout.on("data", (chunk) => handleStdout(chunk, process.stdout));
+  child.stderr.on("data", (chunk) => handleStderr(chunk, process.stderr));
+
+  return child;
 });
 
 let shuttingDown = false;
