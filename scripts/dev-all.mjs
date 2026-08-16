@@ -7,9 +7,11 @@ const scriptsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const shellDirectory = path.resolve(scriptsDirectory, "..");
 const workspaceDirectory = path.dirname(shellDirectory);
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const isWindows = process.platform === "win32";
 
 // Adjust this if your PowerShell script has a different name/location.
 const dbScriptPath = path.join(scriptsDirectory, "local-db.ps1");
+
 
 function startLocalDatabase() {
   if (process.platform !== "win32") {
@@ -42,21 +44,51 @@ function startLocalDatabase() {
   }
 }
 
+function runMigrations(name, cwd) {
+  console.log(`[${name}] running database migrations`);
+  const result = spawnSync(npmCommand, ["run", "db:migrate"], {
+    cwd,
+    stdio: "inherit",
+    shell: isWindows,
+  });
+
+  if (result.error) {
+    console.error(`Cannot start the LynkFlow workspace:\n\n- ${name}: failed to run migrations: ${result.error.message}`);
+    process.exit(1);
+  }
+
+  if (result.status !== 0) {
+    console.error(`Cannot start the LynkFlow workspace:\n\n- ${name}: db:migrate exited with code ${result.status}`);
+    process.exit(1);
+  }
+}
+
 const applications = [
   {
     name: "notifications-svc",
     directory: path.join(workspaceDirectory, "notifications-svc"),
     env: { PORT: "3010", CORS_ORIGINS: "http://localhost:3000,http://localhost:3002" },
     requiresEnv: true,
+    migrate: true,
+    checkSmtpEnv: true,
   },
   {
     name: "auth-svc",
     directory: path.join(workspaceDirectory, "auth-svc"),
     env: { PORT: "4000", CORS_ORIGINS: "http://localhost:3000,http://localhost:3002" },
     requiresEnv: true,
+    migrate: true,
     requiredFiles: [
       { path: ".secrets/jwt-private.pem", hint: "run npm run jwt:keys:generate in that repository" },
     ],
+  },
+  {
+    name: "auth-email-worker",
+    directory: path.join(workspaceDirectory, "auth-svc"),
+    devScript: "dev:email-worker",
+    env: { PORT: "4001", CORS_ORIGINS: "http://localhost:3000,http://localhost:3002" },
+    // Shares auth-svc's repo/deps/.env/migrations, so skip re-checking those.
+    skipChecks: true,
   },
   {
     name: "auth-ui",
@@ -77,6 +109,8 @@ const applications = [
 
 const errors = [];
 for (const application of applications) {
+  if (application.skipChecks) continue;
+
   if (!fs.existsSync(path.join(application.directory, "package.json"))) {
     errors.push(`${application.name}: repository not found at ${application.directory}`);
   } else if (!fs.existsSync(path.join(application.directory, "node_modules"))) {
@@ -87,6 +121,18 @@ for (const application of applications) {
     errors.push(
       `${application.name}: .env is missing; copy .env.example to .env and enter the real database/credential values`,
     );
+  }
+
+  if (application.checkSmtpEnv) {
+    const envPath = path.join(application.directory, ".env");
+    if (fs.existsSync(envPath)) {
+      const envContents = fs.readFileSync(envPath, "utf8");
+      if (/replace_with_|your_brevo_|your_verified_sender/.test(envContents)) {
+        errors.push(
+          `${application.name}: .env contains placeholder SMTP values; configure real SMTP credentials before running the stack`,
+        );
+      }
+    }
   }
 
   for (const requiredFile of application.requiredFiles ?? []) {
@@ -104,6 +150,12 @@ if (errors.length > 0) {
 }
 
 startLocalDatabase();
+
+for (const application of applications) {
+  if (application.migrate) {
+    runMigrations(application.name, application.directory);
+  }
+}
 
 // --- Prefixed, color-coded logging for every service -----------------------
 
@@ -141,7 +193,7 @@ const children = applications.map((application, index) => {
   const color = ANSI_COLORS[index % ANSI_COLORS.length];
   console.log(`[${application.name}] starting in ${application.directory}`);
 
-  const child = spawn(npmCommand, ["run", "dev"], {
+  const child = spawn(npmCommand, ["run", application.devScript ?? "dev"], {
     cwd: application.directory,
     env: { ...process.env, ...application.env },
     stdio: ["inherit", "pipe", "pipe"],
@@ -163,7 +215,16 @@ function shutdown(signal, exitCode = 0) {
   shuttingDown = true;
   console.log(`\nStopping LynkFlow (${signal})...`);
   for (const child of children) {
-    if (!child.killed) child.kill(signal === "SIGINT" ? "SIGINT" : "SIGTERM");
+    if (!child.pid || child.exitCode !== null) continue;
+
+    if (isWindows) {
+      // On Windows, npm's "dev" scripts run inside a shell wrapper, so a plain
+      // child.kill() often only kills that wrapper and leaves the real process
+      // (node, next, vite, etc.) running. Kill the whole process tree instead.
+      spawnSync("taskkill", ["/pid", String(child.pid), "/t", "/f"], { stdio: "ignore" });
+    } else {
+      child.kill(signal === "SIGINT" ? "SIGINT" : "SIGTERM");
+    }
   }
   setTimeout(() => process.exit(exitCode), 1_000).unref();
 }

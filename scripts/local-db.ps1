@@ -15,10 +15,19 @@ $databaseName = "lynkflow_auth"
 $notificationsDatabaseName = "lynkflow_notifications"
 $databaseUser = "lynkflow"
 
-# Each entry points at a service's migrations/ folder (plain numbered .sql
-# files, e.g. 001_create_auth_tables.sql) and the database those files
-# should run against. Services live as siblings of lynkflow-shell, hence
-# $workspaceRoot (one level above $projectRoot) rather than $projectRoot.
+# NOTE: migrations themselves are NOT applied by this script anymore (see
+# Invoke-Migrations below). Each service owns its own migrations via
+# `npm run db:migrate` (scripts/migrate.js), which dev-all.mjs already runs
+# right after this script finishes starting Postgres. This script's job is
+# only to get a Postgres cluster + empty databases up.
+#
+# Invoke-Migrations is kept ONLY for optional standalone/manual use (e.g.
+# `./local-db.ps1 -Action migrate` if you want to sanity-check a service's
+# SQL files apply cleanly outside the normal app workflow). It intentionally
+# writes to its own tracking table, never to `schema_migrations`, so it can
+# never collide with migrate.js's bookkeeping again. Because of that, running
+# `-Action migrate` does NOT mark anything as applied from migrate.js's point
+# of view - `npm run db:migrate` will still (correctly) run those files too.
 $services = @(
     @{ Name = "auth-svc";          MigrationsPath = Join-Path $workspaceRoot "auth-svc\migrations";          Database = $databaseName },
     @{ Name = "notifications-svc"; MigrationsPath = Join-Path $workspaceRoot "notifications-svc\migrations"; Database = $notificationsDatabaseName }
@@ -56,6 +65,8 @@ function Test-DatabaseRunning {
     return $LASTEXITCODE -eq 0
 }
 
+# Standalone/manual helper only - NOT called automatically by Start-LocalDatabase.
+# See the note above the $services declaration for why.
 function Invoke-Migrations {
     if (-not (Test-DatabaseRunning)) {
         throw "PostgreSQL is not running. Run with -Action start first."
@@ -77,19 +88,19 @@ function Invoke-Migrations {
             continue
         }
 
-        # Tracking table so each migration file only ever runs once against
-        # this database, even across repeated 'start' invocations.
+        # Own tracking table, deliberately NOT named schema_migrations, so
+        # this can never collide with migrate.js's bookkeeping again.
         & $psql -h 127.0.0.1 -p $port -U $databaseUser -d $database -v "ON_ERROR_STOP=1" -c @"
-CREATE TABLE IF NOT EXISTS schema_migrations (
+CREATE TABLE IF NOT EXISTS local_db_ps1_migrations (
     filename    text PRIMARY KEY,
     applied_at  timestamptz NOT NULL DEFAULT now()
 );
 "@
         if ($LASTEXITCODE -ne 0) {
-            throw "Could not create schema_migrations tracking table for $($service.Name)."
+            throw "Could not create local_db_ps1_migrations tracking table for $($service.Name)."
         }
 
-        $appliedRaw = & $psql -h 127.0.0.1 -p $port -U $databaseUser -d $database -tAc "SELECT filename FROM schema_migrations"
+        $appliedRaw = & $psql -h 127.0.0.1 -p $port -U $databaseUser -d $database -tAc "SELECT filename FROM local_db_ps1_migrations"
         $applied = @()
         if ($appliedRaw) {
             $applied = $appliedRaw -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
@@ -112,9 +123,9 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
             }
 
             $escapedName = $migrationFile.Name.Replace("'", "''")
-            & $psql -h 127.0.0.1 -p $port -U $databaseUser -d $database -v "ON_ERROR_STOP=1" -c "INSERT INTO schema_migrations (filename) VALUES ('$escapedName')"
+            & $psql -h 127.0.0.1 -p $port -U $databaseUser -d $database -v "ON_ERROR_STOP=1" -c "INSERT INTO local_db_ps1_migrations (filename) VALUES ('$escapedName')"
             if ($LASTEXITCODE -ne 0) {
-                throw "Applied $($migrationFile.Name) but failed to record it in schema_migrations for $($service.Name)."
+                throw "Applied $($migrationFile.Name) but failed to record it in local_db_ps1_migrations for $($service.Name)."
             }
         }
     }
@@ -151,7 +162,9 @@ function Start-LocalDatabase {
         }
     }
 
-    Invoke-Migrations
+    # Migrations are intentionally NOT run here anymore. dev-all.mjs calls
+    # `npm run db:migrate` for each service right after this script returns,
+    # which is the single source of truth for applied migrations.
 
     Write-Host "PostgreSQL is ready: postgresql://${databaseUser}@127.0.0.1:${port}/${databaseName} and ${notificationsDatabaseName}"
 }
