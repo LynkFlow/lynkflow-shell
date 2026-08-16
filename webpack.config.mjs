@@ -32,6 +32,15 @@ const PORT = Number(process.env.PORT ?? 3000);
 const SCRATCH_REMOTE_URL =
   process.env.SCRATCH_REMOTE_URL ?? "http://localhost:3001/remoteEntry.js";
 
+/**
+ * The auth-ui MFE -- pre-session screens (login, signup, forgot/reset
+ * password, activate account). A real domain remote, not a smoke test.
+ * See .claude/rules/auth.md's 14 Aug 2026 entry for why auth lives in its
+ * own MFE rather than the Shell. Mounted at /auth/* in src/App.tsx.
+ */
+const AUTH_REMOTE_URL =
+  process.env.AUTH_REMOTE_URL ?? "http://localhost:3002/remoteEntry.js";
+
 export default (_env, argv) => {
   const isProduction = argv.mode === "production";
 
@@ -82,6 +91,7 @@ export default (_env, argv) => {
         // unlike every MFE's config.
         remotes: {
           scratch: `scratch@${SCRATCH_REMOTE_URL}`,
+          auth: `auth@${AUTH_REMOTE_URL}`,
         },
         shared: {
           // Exactly the three singletons architecture.md mandates -- not a

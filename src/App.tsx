@@ -8,30 +8,78 @@
  * routing-loading-errors.md).
  *
  * Deliberately minimal, per this first pass's scope:
- *  - No auth/login. There's no `-svc` yet to authenticate against
- *    (.claude/rules/progress.md), so this renders its routes unconditionally
- *    -- no session check, no redirect-to-login. Wire up @lynkflow/auth's
- *    Shell-owns-the-session contract (.claude/rules/auth.md) when a real
- *    login flow exists to build against.
+ *  - No session state yet. There's no `-svc` for auth-ui's screens to call
+ *    (.claude/rules/progress.md), and @lynkflow/auth (the Shell-owns-the-
+ *    session contract, .claude/rules/auth.md) doesn't exist yet either --
+ *    /auth/* is federated in, but nothing here reacts to a successful login.
  *  - No branding. Bare layout, ui-kit tokens only, no logo/brand name beyond
  *    the plain page title.
- *  - One remote wired in, and it's a smoke-test stand-in (scratch-test-ui),
- *    not a real domain -- see webpack.config.mjs and README.md.
+ *  - Two remotes wired in: `scratch` is a smoke-test stand-in
+ *    (scratch-test-ui, not a real domain), `auth` is the first real one --
+ *    see webpack.config.mjs and README.md.
  */
 import { lazy } from "react";
-import { Link, Route, Routes as RouterRoutes } from "react-router-dom";
+import { Link, Route, Routes as RouterRoutes, useLocation } from "react-router-dom";
 
 import { RouteBoundary } from "./components/RouteBoundary/index";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 
-// "scratch/App" resolves at runtime via Module Federation (see
-// webpack.config.mjs's `remotes`); src/types/federation.d.ts gives it a type
-// so this compiles. Real domains get the same treatment per remote, or a
-// generated type once a real contract mechanism exists for it.
+// "scratch/App" and "auth/App" resolve at runtime via Module Federation (see
+// webpack.config.mjs's `remotes`); src/types/federation.d.ts gives each a
+// type so this compiles. Real domains get the same treatment per remote, or
+// a generated type once a real contract mechanism exists for it.
+//
+// Mounts auth-ui's `./App`, not its `./Routes` -- `./Routes` is the bare
+// <Route> tree with no providers, and auth-ui's screens need the
+// QueryClientProvider/I18nextProvider that only `./App` sets up (see that
+// file's own docblock in the auth-ui repo). `./Routes` is exposed for a
+// future host that already provides that context itself; the Shell doesn't
+// yet.
 const ScratchApp = lazy(() => import("scratch/App"));
+const AuthApp = lazy(() => import("auth/App"));
+
+function Routes() {
+  return (
+    <RouterRoutes>
+      <Route index element={<HomePage />} />
+      <Route
+        path="/auth/*"
+        element={
+          <RouteBoundary>
+            <AuthApp language="en" />
+          </RouteBoundary>
+        }
+      />
+      <Route
+        path="/scratch/*"
+        element={
+          <RouteBoundary>
+            <ScratchApp language="en" />
+          </RouteBoundary>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </RouterRoutes>
+  );
+}
 
 export default function App() {
+  // Pre-session auth screens (auth-ui's own AuthLayout) are a full-page
+  // view by design -- they render their own complete layout, hero panel
+  // included, and showing the Shell's persistent nav above a login screen
+  // is both visually wrong and lets an unauthenticated visitor navigate
+  // around the app from what's supposed to be a standalone screen.
+  const isAuthRoute = useLocation().pathname.startsWith("/auth");
+
+  if (isAuthRoute) {
+    return (
+      <div className="min-h-screen bg-white text-neutral-900">
+        <Routes />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <header className="border-b border-neutral-200 px-6 py-4">
@@ -40,24 +88,16 @@ export default function App() {
           <Link to="/" className="hover:underline">
             Home
           </Link>
+          <Link to="/auth/login" className="hover:underline">
+            Login
+          </Link>
           <Link to="/scratch" className="hover:underline">
             Scratch (federation smoke test)
           </Link>
         </nav>
       </header>
       <main className="p-6">
-        <RouterRoutes>
-          <Route index element={<HomePage />} />
-          <Route
-            path="/scratch/*"
-            element={
-              <RouteBoundary>
-                <ScratchApp language="en" />
-              </RouteBoundary>
-            }
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </RouterRoutes>
+        <Routes />
       </main>
     </div>
   );

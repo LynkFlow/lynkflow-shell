@@ -24,6 +24,17 @@ jest.mock(
   { virtual: true },
 );
 
+// Same virtual-mock pattern as "scratch/App" above -- auth-ui only exists at
+// runtime via Module Federation (.claude/rules/auth.md, 14 Aug 2026).
+jest.mock(
+  "auth/App",
+  () => ({
+    __esModule: true,
+    default: () => <div>auth remote mock</div>,
+  }),
+  { virtual: true },
+);
+
 describe("App", () => {
   it("renders the home page at /", () => {
     render(
@@ -35,7 +46,7 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "LynkFlow Shell" })).toBeInTheDocument();
   });
 
-  it("renders the layout nav on every route", () => {
+  it("renders the layout nav on a non-auth route", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <App />
@@ -44,6 +55,7 @@ describe("App", () => {
 
     expect(screen.getByText("LynkFlow")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Login" })).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Scratch (federation smoke test)" }),
     ).toBeInTheDocument();
@@ -57,6 +69,28 @@ describe("App", () => {
     );
 
     expect(await screen.findByText("scratch remote mock")).toBeInTheDocument();
+  });
+
+  it("renders the federated auth remote at /auth/*", async () => {
+    render(
+      <MemoryRouter initialEntries={["/auth/login"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText("auth remote mock")).toBeInTheDocument();
+  });
+
+  it("omits the Shell's own nav on an /auth route -- auth-ui's AuthLayout is a standalone full-page view", async () => {
+    render(
+      <MemoryRouter initialEntries={["/auth/login"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("auth remote mock");
+    expect(screen.queryByText("LynkFlow")).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Home" })).not.toBeInTheDocument();
   });
 
   it("renders the not-found page for an unknown route", () => {
